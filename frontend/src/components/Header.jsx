@@ -36,6 +36,12 @@ const Header = () => {
               <li className="nav-item">
                 <Link className="nav-link" to="/chatbot">ChatBot</Link>
               </li>
+              <li className="nav-item">
+                <Link className="nav-link" to="/admin">Admin</Link>
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link" to="/user">User</Link>
+              </li>
             </ul>
 
             <div className="d-flex align-items-center">

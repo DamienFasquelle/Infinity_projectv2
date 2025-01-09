@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Card, Button, Row, Col } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 
 const Games = () => {
   const [games] = useState([
@@ -149,7 +150,7 @@ const Games = () => {
                 <Card.Body>
                   <Card.Title>{game.title}</Card.Title>
                   <Card.Text>{game.description}</Card.Text>
-                  <Button variant="info">Voir plus</Button>
+                  <Button variant="info"><Link to="/gamepage"  className='text-decoration-none text-dark'>Voir plus</Link></Button>
                 </Card.Body>
               </Card>
             </Col>
