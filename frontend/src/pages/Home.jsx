@@ -1,7 +1,26 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, Button, Carousel, Row, Col } from 'react-bootstrap';
+import { fetchPopularGames } from '../services/rawgService';
 
 const Home = () => {
+  const [popularGames, setPopularGames] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadPopularGames = async () => {
+      try {
+        const data = await fetchPopularGames();
+        setPopularGames(data.results);
+      } catch (error) {
+        console.error('Erreur lors de la récupération des jeux populaires:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    console.log(popularGames);
+
+    loadPopularGames();
+  }, []);
   return (
     <main className="home container">
       
@@ -117,63 +136,29 @@ const Home = () => {
         </Carousel>
       </section>
 
-      {/* Section: Jeux Populaires */}
       <section className="popular-games my-5">
         <h2>Jeux Populaires</h2>
-        <Row className="justify-content-center">
-          {/* Card pour un jeu populaire */}
-          <Col md={6} sm={12} lg={3} className="mb-4">
-            <Card>
-              <Card.Img variant="top" src="https://via.placeholder.com/150" />
-              <Card.Body>
-                <Card.Title>Jeu X</Card.Title>
-                <Card.Text>
-                  Explorez le monde fantastique de Jeu X. Il fait partie des jeux les plus joués actuellement.
-                </Card.Text>
-                <Button variant="info">Voir les détails</Button>
-              </Card.Body>
-            </Card>
-          </Col>
-          {/* Card pour un autre jeu populaire */}
-          <Col md={6} sm={12} lg={3} className="mb-4">
-            <Card>
-              <Card.Img variant="top" src="https://via.placeholder.com/150" />
-              <Card.Body>
-                <Card.Title>Jeu Y</Card.Title>
-                <Card.Text>
-                  Rejoignez l'aventure avec Jeu Y, un jeu dynamique qui ravira les fans de stratégie.
-                </Card.Text>
-                <Button variant="info">Voir les détails</Button>
-              </Card.Body>
-            </Card>
-          </Col>
-          {/* Card pour un autre jeu populaire */}
-          <Col md={6} sm={12} lg={3} className="mb-4">
-            <Card>
-              <Card.Img variant="top" src="https://via.placeholder.com/150" />
-              <Card.Body>
-                <Card.Title>Jeu Z</Card.Title>
-                <Card.Text>
-                  Plongez dans le monde captivant de Jeu Z, un jeu qui a captivé des millions de joueurs.
-                </Card.Text>
-                <Button variant="info">Voir les détails</Button>
-              </Card.Body>
-            </Card>
-          </Col>
-          {/* Card pour un autre jeu populaire */}
-          <Col md={6} sm={12} lg={3} className="mb-4">
-            <Card>
-              <Card.Img variant="top" src="https://via.placeholder.com/150" />
-              <Card.Body>
-                <Card.Title>Jeu W</Card.Title>
-                <Card.Text>
-                  Un jeu qui vous immerge dans un univers épique et mystérieux. Jouez dès maintenant !
-                </Card.Text>
-                <Button variant="info">Voir les détails</Button>
-              </Card.Body>
-            </Card>
-          </Col>
-        </Row>
+        {loading ? (
+          <p>Chargement des jeux populaires...</p>
+        ) : (
+          <Row className="justify-content-center">
+            {popularGames.slice(0, 8).map((game) => (
+              <Col key={game.id} md={6} sm={12} lg={3} className="mb-4">
+                <Card>
+                  <Card.Img variant="top" src={game.background_image} alt={game.name} />
+                  <Card.Body>
+                    <Card.Title>{game.name}</Card.Title>
+                    <Card.Text>
+                      Note : {game.rating} / 5<br />
+                      Date de sortie : {game.released}
+                    </Card.Text>
+                    <Button variant="info">Voir les détails</Button>
+                  </Card.Body>
+                </Card>
+              </Col>
+            ))}
+          </Row>
+        )}
       </section>
 
     </main>
