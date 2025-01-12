@@ -5,8 +5,10 @@ import { AuthProvider } from './providers/AuthProvider';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './assets/styles/global.css';
 
+const root = ReactDOM.createRoot(document.getElementById('root'));
 
-ReactDOM.render(
+
+root.render(
   <React.StrictMode>
     <AuthProvider>
       <App />

@@ -1,9 +1,37 @@
-
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import logo from '../assets/images/logo.png';
 
 const Header = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [userInfo, setUserInfo] = useState(null); // Ajouter un état pour stocker les infos de l'utilisateur
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      setIsAuthenticated(true);
+      // Décoder le token pour obtenir les informations de l'utilisateur
+      const decodedToken = JSON.parse(atob(token.split('.')[1]));
+      setUserInfo(decodedToken);  // Sauvegarder les infos dans l'état
+      const userRoles = decodedToken.roles;
+      setIsAdmin(userRoles.includes('ROLE_ADMIN'));  // Vérifier si l'utilisateur est admin
+      console.log(decodedToken)
+    } else {
+      setIsAuthenticated(false);
+    }
+  }, []);
+
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    setIsAuthenticated(false);
+    setIsAdmin(false);
+    setUserInfo(null);
+    navigate('/login');
+  };
+
   return (
     <header className="header-container">
       <nav className="navbar navbar-expand-lg navbar-dark">
@@ -36,9 +64,11 @@ const Header = () => {
               <li className="nav-item">
                 <Link className="nav-link" to="/chatbot">ChatBot</Link>
               </li>
-              <li className="nav-item">
-                <Link className="nav-link" to="/admin">Admin</Link>
-              </li>
+              {isAdmin && (
+                <li className="nav-item">
+                  <Link className="nav-link" to="/admin">Admin</Link>
+                </li>
+              )}
               <li className="nav-item">
                 <Link className="nav-link" to="/user">User</Link>
               </li>
@@ -59,12 +89,25 @@ const Header = () => {
                   Rechercher
                 </button>
               </form>
-              <Link
-                className="btn btn-gradient"
-                to="/login"
-              >
-                Connexion
-              </Link>
+              {/* Afficher le bouton de connexion ou de déconnexion en fonction de l'état */}
+              {isAuthenticated ? (
+                <>
+                  <span className="me-2">Bienvenue, {userInfo?.username}</span>
+                  <button
+                    className="btn btn-gradient"
+                    onClick={handleLogout}
+                  >
+                    Déconnexion
+                  </button>
+                </>
+              ) : (
+                <Link
+                  className="btn btn-gradient"
+                  to="/login"
+                >
+                  Connexion
+                </Link>
+              )}
             </div>
           </div>
         </div>
