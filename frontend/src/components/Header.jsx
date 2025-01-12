@@ -1,28 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import logo from '../assets/images/logo.png';
+import { useGames } from '../contexts/GameContext'; // Utilisation du contexte de jeux
 
 const Header = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
-  const [userInfo, setUserInfo] = useState(null); // Ajouter un état pour stocker les infos de l'utilisateur
+  const [userInfo, setUserInfo] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const { searchResults, handleSearch, loading } = useGames(); // Récupérer searchResults et handleSearch depuis le contexte
   const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
       setIsAuthenticated(true);
-      // Décoder le token pour obtenir les informations de l'utilisateur
       const decodedToken = JSON.parse(atob(token.split('.')[1]));
-      setUserInfo(decodedToken);  // Sauvegarder les infos dans l'état
+      setUserInfo(decodedToken);
       const userRoles = decodedToken.roles;
-      setIsAdmin(userRoles.includes('ROLE_ADMIN'));  // Vérifier si l'utilisateur est admin
-      console.log(decodedToken)
+      setIsAdmin(userRoles.includes('ROLE_ADMIN'));
     } else {
       setIsAuthenticated(false);
     }
   }, []);
-
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -30,6 +30,11 @@ const Header = () => {
     setIsAdmin(false);
     setUserInfo(null);
     navigate('/login');
+  };
+
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+    handleSearch(e.target.value); // Effectuer la recherche dès que la requête change
   };
 
   return (
@@ -81,6 +86,8 @@ const Header = () => {
                   type="search"
                   placeholder="Rechercher"
                   aria-label="Rechercher"
+                  value={searchQuery}
+                  onChange={handleSearchChange} // Mise à jour de la recherche au changement de saisie
                 />
                 <button
                   className="btn search-button"
@@ -89,7 +96,6 @@ const Header = () => {
                   Rechercher
                 </button>
               </form>
-              {/* Afficher le bouton de connexion ou de déconnexion en fonction de l'état */}
               {isAuthenticated ? (
                 <>
                   <span className="me-2">Bienvenue, {userInfo?.username}</span>
@@ -112,6 +118,30 @@ const Header = () => {
           </div>
         </div>
       </nav>
+
+      {/* Affichage des résultats de recherche */}
+      {searchQuery && (
+        <div className="search-results">
+          <h4>Résultats de recherche pour "{searchQuery}":</h4>
+          {loading ? (
+            <p>Chargement des résultats...</p>
+          ) : (
+            <div>
+              {searchResults.length > 0 ? (
+                <ul>
+                  {searchResults.map((game) => (
+                    <li key={game.id}>
+                      <Link to={`/game/${game.id}`}>{game.name}</Link>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p>Aucun jeu trouvé.</p>
+              )}
+            </div>
+          )}
+        </div>
+      )}
     </header>
   );
 };
