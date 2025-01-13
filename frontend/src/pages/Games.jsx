@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Row, Col } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 import { useGames } from '../contexts/GameContext'; 
 import { fetchPlatforms, fetchGenres, fetchGames } from '../services/rawgService';
 import GameCard from '../components/GameCard';
 
 const Games = () => {
-  const [games, setGames] = useState([]); // Les jeux locaux
-  const { gamesData, loading } = useGames(); // Les jeux venant du context
+  const [games, setGames] = useState([]); 
+  const { gamesData, loading } = useGames();
   const [platforms, setPlatforms] = useState([]);
   const [genres, setGenres] = useState([]);
   const [filters, setFilters] = useState({
@@ -16,27 +17,27 @@ const Games = () => {
   });
 
   const [gamesToShow, setGamesToShow] = useState(100); 
+  const navigate = useNavigate();
 
   useEffect(() => {
-    // On récupère d'abord les données de la plateforme, genre et jeux via les services
+
     const fetchFiltersData = async () => {
       const platformsData = await fetchPlatforms();
       const genresData = await fetchGenres();
       const gamesData = await fetchGames();
       setPlatforms(platformsData.results);
       setGenres(genresData.results);
-      setGames(gamesData); // Set les jeux obtenus via la fonction fetchGames()
+      setGames(gamesData);
     };
 
     fetchFiltersData();
-  }, []); // Ce useEffect sera exécuté une seule fois à l'initialisation
+  }, []); 
 
   useEffect(() => {
-    // Vérifiez que les jeux sont bien récupérés avant d'initialiser le contexte
     if (gamesData && gamesData.length > 0) {
-      setGames(gamesData); // Remplace le set local si les données sont déjà dans le contexte
+      setGames(gamesData);
     }
-  }, [gamesData]); // Cette dépendance fait en sorte de ne mettre à jour les jeux que si gamesData change
+  }, [gamesData]); 
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
@@ -69,6 +70,10 @@ const Games = () => {
       (filters.rating ? game.rating >= filters.rating : true)
     );
   });
+
+  const handleViewGamePage = (gameId) => {
+    navigate(`/gamepage/${gameId}`);
+  };
 
   return (
     <div className="games-container">

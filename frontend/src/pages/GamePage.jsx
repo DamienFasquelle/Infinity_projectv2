@@ -1,84 +1,251 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import {
+  fetchGameDetails,
+  fetchGameScreenshots,
+  fetchDevelopers,
+  fetchCreators,
+  fetchStores,
+  fetchGameVideos,
+} from "../services/rawgService";
+import { Col, Row } from "react-bootstrap";
 
 const GamePage = () => {
-  const [comments, setComments] = useState([
-    { user: 'Alice', content: 'Ce jeu est incroyable !', rating: 5 },
-    { user: 'Bob', content: 'Pas mal, mais pourrait être amélioré.', rating: 3 },
-  ]);
+  const { id } = useParams();
+  const [gameDetails, setGameDetails] = useState(null);
+  const [screenshots, setScreenshots] = useState([]);
+  const [developers, setDevelopers] = useState([]);
+  const [creators, setCreators] = useState([]);
+  const [stores, setStores] = useState([]);
+  const [videos, setVideos] = useState([]); 
 
-  const [newComment, setNewComment] = useState('');
-  const [newRating, setNewRating] = useState(0);
+  useEffect(() => {
+    const fetchDetails = async () => {
+      try {
+        // Fetch game details
+        const data = await fetchGameDetails(id);
+        setGameDetails(data);
 
-  const handleAddComment = (e) => {
-    e.preventDefault();
+        // Fetch game screenshots
+        const screenshotData = await fetchGameScreenshots(id);
+        setScreenshots(screenshotData.results || []);
 
-    if (newComment.trim() === '' || newRating === 0) return;
+        // Fetch developers
+        const developersData = await fetchDevelopers();
+        setDevelopers(developersData.results || []);
 
-    setComments([...comments, { user: 'Utilisateur Anonyme', content: newComment, rating: newRating }]);
-    setNewComment('');
-    setNewRating(0);
-  };
+        // Fetch creators
+        const creatorsData = await fetchCreators();
+        setCreators(creatorsData.results || []);
 
-  const averageRating =
-    comments.length > 0
-      ? comments.reduce((acc, comment) => acc + comment.rating, 0) / comments.length
-      : 0;
+        // Fetch stores
+        const storesData = await fetchStores();
+        setStores(storesData.results || []);
+
+        // Fetch game videos
+        const videoData = await fetchGameVideos(id);
+        setVideos(videoData.results || []);
+      } catch (error) {
+        console.error("Erreur lors du chargement des données du jeu", error);
+      }
+    };
+
+    fetchDetails();
+  }, [id]);
+
+  if (!gameDetails)
+    return <div className="game-page-container">Chargement...</div>;
 
   return (
     <div className="game-page-container">
-      <div className="game-details">
-        <img src="https://via.placeholder.com/300" alt="Game Cover" className="game-cover" />
-        <div className="game-info">
-          <h1>Titre du Jeu</h1>
-          <p>Plateforme : PC, PlayStation, Xbox</p>
-          <p>Genre : Action, Aventure</p>
-          <p>Date de sortie : 12 janvier 2025</p>
-          <p>Description : Découvrez un jeu palpitant rempli d'action, de mystère et de défis.</p>
-          <div className="game-rating">
-            <strong>Note moyenne :</strong> {averageRating.toFixed(1)} / 5
-          </div>
+      <div
+        className="game-header"
+        style={{
+          backgroundImage: `url(${gameDetails.background_image})`,
+        }}
+      >
+        <div className="game-title">
+          <h1>{gameDetails.name}</h1>
+          <p>{gameDetails.released || "Non spécifié"}</p>
         </div>
       </div>
 
-      <div className="comments-section">
-        <h2>Commentaires</h2>
-        <ul className="comments-list">
-          {comments.map((comment, index) => (
-            <li key={index} className="comment-item">
-              <div>
-                <strong>{comment.user}</strong> ({comment.rating} / 5)
-              </div>
-              <p>{comment.content}</p>
-            </li>
-          ))}
-        </ul>
+      <div className="game-content">
+        <div className="game-info">
+          {/* Description */}
+          <section className="my-4">
+            <h2>Description</h2>
+            <p>{gameDetails.description_raw || "Non spécifié"}</p>
+          </section>
 
-        <form onSubmit={handleAddComment} className="add-comment-form">
-          <h3>Ajouter un commentaire</h3>
-          <textarea
-            value={newComment}
-            onChange={(e) => setNewComment(e.target.value)}
-            placeholder="Écrivez votre commentaire ici..."
-            required
-          ></textarea>
-          <div className="rating-input">
-            <label htmlFor="rating">Note :</label>
-            <select
-              id="rating"
-              value={newRating}
-              onChange={(e) => setNewRating(Number(e.target.value))}
-              required
-            >
-              <option value="0">Sélectionnez une note</option>
-              <option value="1">1 - Très mauvais</option>
-              <option value="2">2 - Mauvais</option>
-              <option value="3">3 - Moyen</option>
-              <option value="4">4 - Bon</option>
-              <option value="5">5 - Excellent</option>
-            </select>
-          </div>
-          <button type="submit">Ajouter</button>
-        </form>
+          {/* Genres */}
+          <section className="my-4">
+            <h2>Genres</h2>
+            {gameDetails.genres && gameDetails.genres.length > 0 ? (
+              <div className="genres">
+                {gameDetails.genres.map((genre) => (
+                  <span key={genre.id} className="genre">
+                    {genre.name}
+                  </span>
+                ))}
+              </div>
+            ) : (
+              <p>Non spécifié</p>
+            )}
+          </section>
+
+          {/* Tags */}
+          <section className="my-4">
+            <h2>Tags</h2>
+            {gameDetails.tags && gameDetails.tags.length > 0 ? (
+              <div className="tags">
+                {gameDetails.tags.map((tag) => (
+                  <span key={tag.id} className="tag">
+                    {tag.name}
+                  </span>
+                ))}
+              </div>
+            ) : (
+              <p>Non spécifié</p>
+            )}
+          </section>
+
+          {/* Développeurs, Créateurs et Magasins - Affichage sur une ligne */}
+          <section className="d-flex justify-content-around my-4">
+            {/* Développeurs */}
+            <div className="developers">
+              <h2>Développeurs</h2>
+              {developers.length > 0 ? (
+                <ul>
+                  {developers.map((dev) => (
+                    <li key={dev.id}>{dev.name}</li>
+                  ))}
+                </ul>
+              ) : (
+                <p>Non spécifié</p>
+              )}
+            </div>
+
+            {/* Créateurs */}
+            <div className="creators">
+              <h2>Créateurs</h2>
+              {creators.length > 0 ? (
+                <ul>
+                  {creators.map((creator) => (
+                    <li key={creator.id}>{creator.name}</li>
+                  ))}
+                </ul>
+              ) : (
+                <p>Non spécifié</p>
+              )}
+            </div>
+
+            {/* Magasins */}
+            <div className="stores">
+              <h2>Magasins</h2>
+              {stores.length > 0 ? (
+                <ul>
+                  {stores.map((store) => (
+                    <li key={store.id}>
+                      <a
+                        href={store.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {store.name}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p>Non spécifié</p>
+              )}
+            </div>
+          </section>
+
+          {/* Exigences système */}
+          <section className="my-4">
+            <h2>Exigences système</h2>
+            {gameDetails.platforms &&
+            gameDetails.platforms[0]?.requirements_en ? (
+              <div className="requirements">
+                <div>
+                  <h4>Minimum</h4>
+                  <pre>
+                    {gameDetails.platforms[0]?.requirements_en?.minimum ||
+                      "Non spécifié"}
+                  </pre>
+                </div>
+                <div>
+                  <h4>Recommandé</h4>
+                  <pre>
+                    {gameDetails.platforms[0]?.requirements_en?.recommended ||
+                      "Non spécifié"}
+                  </pre>
+                </div>
+              </div>
+            ) : (
+              <p>Non spécifié</p>
+            )}
+          </section>
+
+          {/* Captures d'écran */}
+          <section>
+            <h2>Captures d'écran</h2>
+            {screenshots.length > 0 ? (
+              <div className="game-screenshots">
+                <div className="screenshots-container">
+                  {screenshots.map((screenshot, index) => (
+                    <img
+                      key={index}
+                      src={screenshot.image}
+                      alt={`Screenshot ${index + 1}`}
+                      className="screenshot"
+                    />
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <p>Non spécifié</p>
+            )}
+          </section>
+
+          {/* Vidéos */}
+          <section>
+          <h2>Vidéos</h2>
+  {videos.length > 0 ? (
+    <div className="game-videos">
+   
+      <Row className="videos-container">
+        {videos.map((video, index) => {
+        
+          const videoUrl = video.data.max || video.data['480']; 
+
+          return (
+            <Col key={index} xs={12} sm={6} md={4} lg={3} xl={3} className="mb-4">
+              {videoUrl ? (
+                <div className="video">
+                  <h3>{video.name}</h3>
+                  <video width="100%" height="auto" controls>
+                    <source src={videoUrl} type="video/mp4" />
+                    Votre navigateur ne supporte pas la lecture de cette vidéo.
+                  </video>
+                </div>
+              ) : (
+                <p>La vidéo n'est pas disponible.</p>
+              )}
+            </Col>
+          );
+        })}
+      </Row>
+    </div>
+  ) : (
+    <p>Aucune vidéo disponible.</p>
+  )}
+</section>
+
+
+        </div>
       </div>
     </div>
   );

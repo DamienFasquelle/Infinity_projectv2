@@ -37,7 +37,7 @@ export const fetchGames = async (totalPages = 10) => {
  * @param {string} platforms - Identifiants des plateformes séparés par des virgules.
  * @returns {Promise<Object>} Les données des jeux populaires.
  */
-export const fetchPopularGames = async (dates = '2000-01-01,2023-01-01', platforms = '18,1,7') => {
+export const fetchPopularGames = async (dates = '2023-01-01', platforms = '18,1,7') => {
     const url = `${BASE_URL}/games?key=${API_KEY}&dates=${dates}&platforms=${platforms}`;
     const response = await axios.get(url);
     return response.data;
@@ -135,3 +135,14 @@ export const fetchPopularGames = async (dates = '2000-01-01,2023-01-01', platfor
     const response = await axios.get(url);
     return response.data;
   };
+
+  /**
+ * Fetch des vidéos d'un jeu spécifique.
+ * @param {number|string} gameId - Identifiant du jeu.
+ * @returns {Promise<Object>} Les vidéos du jeu.
+ */
+export const fetchGameVideos = async (gameId) => {
+  const url = `${BASE_URL}/games/${gameId}/movies?key=${API_KEY}`;
+  const response = await axios.get(url);
+  return response.data;
+};

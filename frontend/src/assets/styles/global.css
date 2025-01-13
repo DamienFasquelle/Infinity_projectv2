@@ -1,391 +1,501 @@
+/* Global */
 body {
-    margin: 0;
-    font-family: "Roboto", sans-serif;
-    background-color: #0e0e0e;
-    color: #fff;
+  margin: 0;
+  font-family: "Roboto", sans-serif;
+  background-color: #0e0e0e;
+  color: #fff;
 }
 
 a {
-    color: #00ffff;
-    text-decoration: none;
+  color: #00ffff;
+  text-decoration: none;
 }
 
 a:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
+/* Home */
 .home {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 0;
 }
 
 .home .hero {
-    text-align: center;
+  text-align: center;
 }
 
 .home .hero h1 {
-    font-size: 2.5rem;
-    color: #00ffff;
+  font-size: 2.5rem;
+  color: #00ffff;
 }
 
 .home .hero p {
-    margin-top: 1rem;
-    font-size: 1.2rem;
-    color: #d1d1d1;
+  margin-top: 1rem;
+  font-size: 1.2rem;
+  color: #d1d1d1;
 }
 
 .home .hero .cta {
-    margin-top: 2rem;
-    padding: 0.8rem 2rem;
-    font-size: 1rem;
-    background: linear-gradient(90deg, #00ffff, #0088ff);
-    border: none;
-    border-radius: 5px;
-    color: #fff;
-    cursor: pointer;
-    transition: background 0.3s;
+  margin-top: 2rem;
+  padding: 0.8rem 2rem;
+  font-size: 1rem;
+  background: linear-gradient(90deg, #00ffff, #0088ff);
+  border: none;
+  border-radius: 5px;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.3s;
 }
 
 .home .hero .cta:hover {
-    background: linear-gradient(90deg, #0088ff, #00ffff);
+  background: linear-gradient(90deg, #0088ff, #00ffff);
 }
 
+/* Container */
 .container {
-    width: 90%;
-    margin: 5em auto;
+  width: 90%;
+  margin: 1em auto;
 }
 
+/* Footer */
 .footer {
-    background-color: #1a1a1a;
-    color: #fff;
-    text-align: center;
-    padding: 1.5rem 0;
+  background-color: #1a1a1a;
+  color: #fff;
+  text-align: center;
+  padding: 1.5rem 0;
 }
 
 .footer p {
-    margin: 0.5rem 0;
+  margin: 0.5rem 0;
 }
 
 .footer a {
-    color: #00ffff;
+  color: #00ffff;
 }
 
 .footer a:hover {
-    color: #fff;
+  color: #fff;
 }
 
-
+/* Card */
 .card {
-    background-color: #1a1a1a;
-    border-radius: 8px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+  background-color: #1a1a1a;
+  border-radius: 8px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
 }
 
 .card img {
-    width: 100%;
-    height: auto;
-    border-radius: 8px 8px 0 0;
+  width: 100%;
+  height: auto;
+  border-radius: 8px 8px 0 0;
 }
 
 .card-body {
-    padding: 15px;
+  padding: 15px;
 }
 
 .card-title {
-    font-size: 1.2rem;
-    color: #00ffff;
+  font-size: 1.2rem;
+  color: #00ffff;
 }
 
 .card-text {
-    font-size: 1rem;
-    color: #d1d1d1;
+  font-size: 1rem;
+  color: #d1d1d1;
 }
 
 .card-button {
-    background: linear-gradient(90deg, #00ffff, #0088ff);
-    border: none;
-    color: #fff;
-    padding: 10px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background 0.3s;
+  background: linear-gradient(90deg, #00ffff, #0088ff);
+  border: none;
+  color: #fff;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s;
 }
 
 .card-button:hover {
-    background: linear-gradient(90deg, #0088ff, #00ffff);
+  background: linear-gradient(90deg, #0088ff, #00ffff);
 }
 
+/* Header */
 .header-container {
-    background-color: #1a1a1a;
-    padding: 20px;
-  }
-  
-  
-  .header-container .navbar-brand img {
-    max-width: 120px;
-    height: auto;
-  }
-  
-  .nav-link {
-    color: #00ffff !important;
-    transition: color 0.3s;
-  }
-  
-  .nav-link:hover {
-    color: #0088ff !important;
-  }
-  
-  .search-bar {
-    background-color: #1a1a1a;
-    color: #fff;
-    border: 1px solid #0088ff;
-  }
-  
-  .search-bar::placeholder {
-    color: #aaa;
-  }
-  
-  .search-button {
-    border: 1px solid #00ffff;
-    color: #00ffff;
-    background-color: transparent;
-    transition: all 0.3s;
-  }
-  
-  .search-button:hover {
-    background-color: #00ffff;
-    color: #000;
-  }
-  
-  .btn-gradient {
-    background: linear-gradient(90deg, #00ffff, #0088ff);
-    border: none;
-    color: #fff;
-    padding: 5px 15px;
-    border-radius: 5px;
-    text-decoration: none;
-    transition: all 0.3s;
-  }
-  
-  .btn-gradient:hover {
-    background: linear-gradient(90deg, #0088ff, #00ffff);
-    color: #000;
-  }
+  background-color: #343a40;
+}
 
-  .form-container {
-    max-width: 400px;
-    margin: 50px auto;
-    background-color: #1a1a1a;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
-  }
-  
-  .form-container h1 {
-    font-size: 1.8rem;
-    color: #00ffff;
-    text-align: center;
-    margin-bottom: 1.5rem;
-  }
-  
-  .form-container label {
-    display: block;
-    font-size: 1rem;
-    margin-bottom: 0.5rem;
-  }
-  
-  .form-container input {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 1rem;
-    border: none;
-    border-radius: 4px;
-  }
-  
-  .form-container button {
-    width: 100%;
-    padding: 10px;
-    background: linear-gradient(90deg, #00ffff, #0088ff);
-    border: none;
-    color: #fff;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background 0.3s;
-  }
-  
-  .form-container button:hover {
-    background: linear-gradient(90deg, #0088ff, #00ffff);
-  }
-  
-  .form-container a {
-    display: block;
-    text-align: center;
-    margin-top: 1rem;
-    color: #00ffff;
-  }
-  
-  .form-container a:hover {
-    color: #0088ff;
-  }
+.header-container .navbar {
+  padding: 0.5rem 1rem;
+}
+
+.header-container .navbar-brand img {
+  max-width: 120px;
+  height: auto;
+}
+
+.navbar-nav .nav-item .nav-link {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  color: #00ffff !important;
+  transition: color 0.3s;
+}
+
+.navbar-nav .nav-item .nav-link:hover {
+  color: #0088ff !important;
+}
+
+.navbar-toggler-icon {
+  background-color: #fff;
+}
+
+/* Search */
+.search-bar {
+  background-color: #1a1a1a;
+  color: #fff;
+  border: 1px solid #0088ff;
+}
+
+.search-bar::placeholder {
+  color: #aaa;
+}
+
+.search-button {
+  border: 1px solid #00ffff;
+  color: #00ffff;
+  background-color: transparent;
+  transition: all 0.3s;
+  height: 2.5rem;
+  padding: 0.25rem 1rem;
+}
+
+.search-button:hover {
+  background-color: #00ffff;
+  color: #000;
+}
+
+.search-form {
+  display: flex;
+  position: relative;
+  width: 300px;
+}
+
+.search-form input {
+  width: 100%;
+  padding: 6px;
+  border-radius: 6px;
+  border: 1px solid #0088ff;
+  background-color: #1a1a1a;
+  color: #fff;
+  font-size: 1rem;
+}
+
+.search-form select {
+  width: 100%;
+  padding: 12px;
+  border-radius: 6px;
+  border: 1px solid #0088ff;
+  background-color: #1a1a1a;
+  color: #fff;
+  position: absolute;
+  top: 35px;
+  left: 0;
+  z-index: 999;
+}
+
+.search-form button {
+  display: none;
+}
+
+/* Button */
+.btn-gradient {
+  background: linear-gradient(90deg, #00ffff, #0088ff);
+  border: none;
+  color: #fff;
+  padding: 10px 20px;
+  font-size: 1rem;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: all 0.3s;
+}
+
+.btn-gradient:hover {
+  background: linear-gradient(90deg, #0088ff, #00ffff);
+  color: #000;
+}
+
+.btn-danger {
+  padding: 10px 20px;
+  font-size: 1rem;
+  border-radius: 6px;
+  transition: background-color 0.3s;
+}
+
+.btn-danger:hover {
+  background-color: #dc3545;
+}
+
+/* Form Container */
+.form-container {
+  max-width: 400px;
+  margin: 50px auto;
+  background-color: #1a1a1a;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+.form-container h1 {
+  font-size: 1.8rem;
+  color: #00ffff;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.form-container label {
+  display: block;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.form-container input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 1rem;
+  border: none;
+  border-radius: 4px;
+}
+
+.form-container button {
+  width: 100%;
+  padding: 10px;
+  background: linear-gradient(90deg, #00ffff, #0088ff);
+  border: none;
+  color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.form-container button:hover {
+  background: linear-gradient(90deg, #0088ff, #00ffff);
+}
+
+.form-container a {
+  display: block;
+  text-align: center;
+  margin-top: 1rem;
+  color: #00ffff;
+}
+
+.form-container a:hover {
+  color: #0088ff;
+}
+
+.game-page-container {
+  max-width: 1800px;
+  margin: 0 auto;
+  padding: 30px;
+}
+
+.game-header {
+  background-size: cover;
+  background-position: center;
+  padding: 100px 20px;
+  color: white;
+  text-align: center;
+  border-radius: 10px;
+  margin-bottom: 30px;
+}
+
+.game-title h1 {
+  font-size: 3rem;
+  margin: 0;
+}
+
+.game-title p {
+  font-size: 1.5rem;
+  margin-top: 10px;
+}
+
+.game-content {
+  display: flex;
+  justify-content: space-between;
+  gap: 30px;
+}
+
+.game-info {
+  flex: 2;
+  padding: 20px;
+  background-color: #1a1a1a;
+  border-radius: 8px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.game-info h2 {
+  font-size: 1.8rem;
+  margin-bottom: 10px;
+  color: #00ffff;
+}
+
+.game-info p {
+  color: #d1d1d1;
+}
+
+.genres,
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.genre,
+.tag {
+  background-color: #0088ff;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 1rem;
+}
+
+.rating-breakdown {
+  margin-top: 20px;
+}
+
+.rating-category {
+  background-color: #343a40;
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.screenshot {
+  width: 100%;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  margin-bottom: 10px;
+}
+
+.screenshots-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.requirements {
+  display: flex;
+  gap: 2rem;
+}
+
+.requirements div {
+  flex: 1;
+}
+
+.requirements h4 {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+  color: #00ffff;
+}
+
+.requirements pre {
+  background-color: #343a40;
+  padding: 10px;
+  border-radius: 5px;
+  color: #d1d1d1;
+}
+
+.game-screenshots h2 {
+  font-size: 1.8rem;
+  color: #00ffff;
+  margin-bottom: 20px;
+}
+
+/* Comments */
+.comments-section {
+  margin-top: 30px;
+}
+
+.comments-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 20px;
+}
+
+.comment-item {
+  background-color: #f8f9fa;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+.add-comment-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.add-comment-form textarea {
+  width: 100%;
+  height: 100px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.rating-input {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.rating-input select {
+  padding: 5px;
+}
+
+.add-comment-form button {
+  align-self: flex-start;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.add-comment-form button:hover {
+  background-color: #0056b3;
+}
 
 
-  .games-container {
-    display: flex;
-  }
-  
-  .filters-aside {
-    width: 250px;
-    padding: 20px;
-    background-color: #1a1a1a;
-  }
-  
-  .games-content {
-    flex: 1;
-    padding: 20px;
-  }
-  
-  aside h3 {
-    margin-bottom: 20px;
-  }
-  
-  select {
-    width: 100%;
-    margin-bottom: 10px;
-  }
-  
-  .filters {
-    margin-bottom: 20px;
-    background-color: #1a1a1a;
-    padding: 15px;
-    border-radius: 8px;
-  }
-  
-  .filters label {
-    color: #fff;
-    display: block;
-    margin-bottom: 5px;
-  }
-  
-  .filters select {
-    width: 100%;
-    padding: 8px;
-    margin-bottom: 10px;
-    border: none;
-    border-radius: 4px;
-    background-color: #333;
-    color: #fff;
-  }
-  
-  h2 {
-    text-align: center;
-    color: #00ffff;
-  }
+/* GameCard.css */
 
-  .admin-dashboard-container, .user-dashboard-container {
-    padding: 20px;
-  }
-  
-  .admin-dashboard-container h1, .user-dashboard-container h1 {
-    font-size: 2rem;
-    margin-bottom: 30px;
-  }
-  
-  .card-admin {
-    height: 100%;
-    text-align: center;
-  }
+.game-card {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
 
-  .game-page-container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-  }
-  
-  .game-details {
-    display: flex;
-    gap: 20px;
-    margin-bottom: 30px;
-  }
-  
-  .game-cover {
-    width: 300px;
-    height: auto;
-    border-radius: 10px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-  }
-  
-  .game-info h1 {
-    font-size: 2rem;
-    margin-bottom: 10px;
-  }
-  
-  .game-info p {
-    margin: 5px 0;
-  }
-  
-  .game-rating {
-    margin-top: 15px;
-    font-size: 1.2rem;
-    color: #007bff;
-  }
-  
-  .comments-section {
-    margin-top: 30px;
-  }
-  
-  .comments-list {
-    list-style: none;
-    padding: 0;
-    margin: 0 0 20px;
-  }
-  
-  .comment-item {
-    background-color: #f8f9fa;
-    padding: 15px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    margin-bottom: 10px;
-  }
-  
-  .add-comment-form {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-  
-  .add-comment-form textarea {
-    width: 100%;
-    height: 100px;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-  }
-  
-  .rating-input {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  
-  .rating-input select {
-    padding: 5px;
-  }
-  
-  .add-comment-form button {
-    align-self: flex-start;
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
-  
-  .add-comment-form button:hover {
-    background-color: #0056b3;
-  }
-  
-  
+.game-card-img {
+  transition: all 1s ease-out;
+  transform: scale(1);
+  opacity: 0.7;
+  width: 100%;
+  height: auto;
+}
+
+.game-card:hover .game-card-img {
+  transform: scale(1.1);
+  opacity: 1;
+}
+
+.game-card:hover video {
+  transform: scale(1.1);
+  opacity: 1;
+}
+
+.game-card-body {
+  transition: transform 0.3s ease-out;
+}
