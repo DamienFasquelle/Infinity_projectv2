@@ -42,6 +42,23 @@ export const fetchPopularGames = async (dates = '2023-01-01', platforms = '18,1,
     const response = await axios.get(url);
     return response.data;
   };
+
+  /**
+ * Fetch des jeux les plus récents (après une certaine date).
+ * @param {string} date - Date de lancement minimum au format YYYY-MM-DD.
+ * @returns {Promise<Array>} Les jeux les plus récents après la date spécifiée.
+ */
+export const fetchRecentGames = async (date = '2024-01-01') => {
+  const url = `${BASE_URL}/games?key=${API_KEY}&dates=${date},2025-01-01`; // Recherche les jeux après cette date
+  try {
+    const response = await axios.get(url);
+    return response.data.results; // On retourne seulement les jeux
+  } catch (error) {
+    console.error("Erreur lors de la récupération des jeux récents :", error);
+    return [];
+  }
+};
+
   
   /**
    * Fetch des plateformes disponibles.
