@@ -37,7 +37,7 @@ const CommentForm = ({ gameId }) => {
     const commentData = {
       content,
       rating,
-      idGames: gameId,
+      gameId: parseInt(gameId),
     };
     console.log("Données envoyées :", commentData);
 
@@ -55,10 +55,9 @@ const CommentForm = ({ gameId }) => {
       console.log("Réponse de la requête :", response);
 
       if (response.status === 201) {
-        setContent(""); // Réinitialise le contenu du formulaire
-        setRating(1); // Réinitialise la note
+        setContent("");
+        setRating(1); 
         setSuccess("Commentaire ajouté avec succès");
-        navigate(`/game/${gameId}`);
       }
     } catch (err) {
       console.error("Erreur de requête :", err);
