@@ -7,8 +7,11 @@ import {
   fetchCreators,
   fetchStores,
   fetchGameVideos,
+  fetchSimilarGames,
+  fetchGameSeries,
 } from "../services/rawgService";
 import { Col, Row } from "react-bootstrap";
+import GameCard from "../components/GameCard";
 
 const GamePage = () => {
   const { id } = useParams();
@@ -17,7 +20,9 @@ const GamePage = () => {
   const [developers, setDevelopers] = useState([]);
   const [creators, setCreators] = useState([]);
   const [stores, setStores] = useState([]);
-  const [videos, setVideos] = useState([]); 
+  const [videos, setVideos] = useState([]);
+  const [similarGames, setSimilarGames] = useState([]);
+  const [gamesSeries, setGamesSeries] = useState([]);
 
   useEffect(() => {
     const fetchDetails = async () => {
@@ -45,6 +50,20 @@ const GamePage = () => {
         // Fetch game videos
         const videoData = await fetchGameVideos(id);
         setVideos(videoData.results || []);
+
+        const gameSeriesData = await fetchGameSeries(id);
+        setGamesSeries(gameSeriesData.results || []);
+
+        console.log(gamesSeries)
+
+        if (data.genres && data.tags) {
+          const similarGamesData = await fetchSimilarGames(
+            id,
+            data.genres,
+            data.tags
+          );
+          setSimilarGames(similarGamesData);
+        }
       } catch (error) {
         console.error("Erreur lors du chargement des données du jeu", error);
       }
@@ -76,6 +95,23 @@ const GamePage = () => {
           <section className="my-4">
             <h2>Description</h2>
             <p>{gameDetails.description_raw || "Non spécifié"}</p>
+          </section>
+
+          <section className="my-4">
+            <h2>Jeux Similaires par Nom</h2>
+            {gamesSeries.length > 0 ? (
+              <div className="similar-name-games">
+                <Row className="justify-content-center">
+                  {gamesSeries.map((game) => (
+                    <Col key={game.id} md={4} sm={6} lg={2} className="mb-4">
+                      <GameCard game={game} />
+                    </Col>
+                  ))}
+                </Row>
+              </div>
+            ) : (
+              <p>Aucun jeu similaire trouvé par nom.</p>
+            )}
           </section>
 
           {/* Genres */}
@@ -212,39 +248,60 @@ const GamePage = () => {
 
           {/* Vidéos */}
           <section>
-          <h2>Vidéos</h2>
-  {videos.length > 0 ? (
-    <div className="game-videos">
-   
-      <Row className="videos-container">
-        {videos.map((video, index) => {
-        
-          const videoUrl = video.data.max || video.data['480']; 
+            <h2>Vidéos</h2>
+            {videos.length > 0 ? (
+              <div className="game-videos">
+                <Row className="videos-container">
+                  {videos.map((video, index) => {
+                    const videoUrl = video.data.max || video.data["480"];
 
-          return (
-            <Col key={index} xs={12} sm={6} md={4} lg={3} xl={3} className="mb-4">
-              {videoUrl ? (
-                <div className="video">
-                  <h3>{video.name}</h3>
-                  <video width="100%" height="auto" controls>
-                    <source src={videoUrl} type="video/mp4" />
-                    Votre navigateur ne supporte pas la lecture de cette vidéo.
-                  </video>
-                </div>
-              ) : (
-                <p>La vidéo n'est pas disponible.</p>
-              )}
-            </Col>
-          );
-        })}
-      </Row>
-    </div>
-  ) : (
-    <p>Aucune vidéo disponible.</p>
-  )}
-</section>
-
-
+                    return (
+                      <Col
+                        key={index}
+                        xs={12}
+                        sm={6}
+                        md={4}
+                        lg={3}
+                        xl={3}
+                        className="mb-4"
+                      >
+                        {videoUrl ? (
+                          <div className="video">
+                            <h3>{video.name}</h3>
+                            <video width="100%" height="auto" controls>
+                              <source src={videoUrl} type="video/mp4" />
+                              Votre navigateur ne supporte pas la lecture de
+                              cette vidéo.
+                            </video>
+                          </div>
+                        ) : (
+                          <p>La vidéo n'est pas disponible.</p>
+                        )}
+                      </Col>
+                    );
+                  })}
+                </Row>
+              </div>
+            ) : (
+              <p>Aucune vidéo disponible.</p>
+            )}
+          </section>
+          <section className="my-4">
+            <h2>Jeux Similaires</h2>
+            {similarGames.length > 0 ? (
+              <div className="similar-games">
+                <Row className="justify-content-center">
+                  {similarGames.map((game) => (
+                    <Col key={game.id} md={4} sm={6} lg={2} className="mb-4">
+                      <GameCard game={game} />
+                    </Col>
+                  ))}
+                </Row>
+              </div>
+            ) : (
+              <p>Aucun jeu similaire trouvé.</p>
+            )}
+          </section>
         </div>
       </div>
     </div>

@@ -49,7 +49,7 @@ const Home = () => {
         ) : (
           <Row className="justify-content-center">
             {recentGames.slice(0, 8).map((game) => (
-              <Col key={game.id} md={6} sm={12} lg={3} className="mb-4">
+              <Col key={game.id} md={6} sm={12} lg={2} className="mb-4">
                 <GameCard game={game} />
               </Col>
             ))}
@@ -65,7 +65,7 @@ const Home = () => {
         ) : (
           <Row className="justify-content-center">
             {popularGames.slice(0, 8).map((game) => (
-              <Col key={game.id} md={6} sm={12} lg={3} className="mb-4">
+              <Col key={game.id} md={6} sm={12} lg={2} className="mb-4">
                 <GameCard game={game} />
               </Col>
             ))}

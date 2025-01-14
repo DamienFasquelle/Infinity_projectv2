@@ -175,7 +175,7 @@ const Games = () => {
         ) : (
           <Row className="justify-content-center">
             {filteredGames.slice(0, gamesToShow).map((game) => (
-              <Col key={game.id} md={4} sm={6} lg={3} className="mb-4">
+              <Col key={game.id} md={4} sm={6} lg={2} className="mb-4">
                 <GameCard game={game} />
               </Col>
             ))}

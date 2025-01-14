@@ -40,14 +40,17 @@ const GameCard = ({ game }) => {
   const handleMouseLeave = () => {
     setIsHovered(false);
   };
-
-  // Vérifier la première vidéo disponible, sinon utiliser l'image de couverture
   const videoUrl = videos.length > 0 ? (videos[0].data.max || videos[0].data['480']) : null;
 
+
+  const limitedPlatforms = game.platforms?.slice(0, 3);
+  const limitedGenres = game.genres?.slice(0, 3);
+
   return (
-    <Card 
-      className="game-card" 
-      onMouseEnter={handleMouseEnter} 
+    <Card
+      className="game-card d-flex flex-column"
+      style={{ height: '480px', width: '100%', maxWidth: '300px' }}
+      onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
       {/* Afficher la vidéo au survol, sinon afficher l'image */}
@@ -62,6 +65,7 @@ const GameCard = ({ game }) => {
           src={videoUrl}
           alt={game.name}
           className="game-card-img"
+          style={{ height: '200px', objectFit: 'cover' }}
         />
       ) : (
         <Card.Img
@@ -69,18 +73,28 @@ const GameCard = ({ game }) => {
           src={game.background_image || 'https://via.placeholder.com/150'}
           alt={game.name}
           className="game-card-img"
+          style={{ height: '200px', objectFit: 'cover' }}
         />
       )}
-      <Card.Body className="game-card-body">
+      <Card.Body
+        className="game-card-body d-flex flex-column"
+        style={{ flex: 1, overflow: 'hidden' }} // Empêche le débordement
+      >
         <Card.Title>{game.name}</Card.Title>
-        <Card.Text>
+        <Card.Text
+          style={{
+            flexGrow: 1,
+            overflow: 'hidden',
+          
+          }}
+        >
           <strong>Date de sortie :</strong> {game.released || 'N/A'} <br />
           <strong>Note :</strong> {game.rating || 'Non noté'} / 5 <br />
-          <strong>Plateformes :</strong> <br />
-          {game.platforms?.map((p) => p.platform.name).join(', ') || 'Non spécifié'} <br />
-          <strong>Genres :</strong> {game.genres?.map((g) => g.name).join(', ') || 'Non spécifié'} <br />
+          <strong>Plateformes : </strong>
+          {limitedPlatforms?.map((p) => p.platform.name).join(', ')}{game.platforms?.length > 6 ? '...' : ''} <br />
+          <strong>Genres :</strong> {limitedGenres?.map((g) => g.name).join(', ')}{game.genres?.length > 6 ? '...' : ''} <br />
         </Card.Text>
-        <Button variant="primary" onClick={handleViewGamePage}>
+        <Button variant="primary" onClick={handleViewGamePage} style={{ marginTop: 'auto' }}>
           Voir le jeu
         </Button>
       </Card.Body>
