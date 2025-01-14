@@ -12,6 +12,7 @@ import {
 } from "../services/rawgService";
 import { Col, Row } from "react-bootstrap";
 import GameCard from "../components/GameCard";
+import CommentForm from "../components/CommentForm";
 
 const GamePage = () => {
   const { id } = useParams();
@@ -53,8 +54,6 @@ const GamePage = () => {
 
         const gameSeriesData = await fetchGameSeries(id);
         setGamesSeries(gameSeriesData.results || []);
-
-        console.log(gamesSeries)
 
         if (data.genres && data.tags) {
           const similarGamesData = await fetchSimilarGames(
@@ -302,6 +301,9 @@ const GamePage = () => {
               <p>Aucun jeu similaire trouvé.</p>
             )}
           </section>
+          <section className="my-4">
+        <CommentForm gameId={id} />
+      </section>
         </div>
       </div>
     </div>

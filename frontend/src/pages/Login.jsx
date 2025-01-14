@@ -22,8 +22,8 @@ const Login = () => {
      
       const decodedToken = JSON.parse(atob(token.split('.')[1]));
       const userRole = decodedToken.roles[0];
-      console.log(userRole);
-
+      console.log('Token décodé :', decodedToken);
+     
 
       if (userRole === 'ROLE_ADMIN') {
         navigate('/admin');
