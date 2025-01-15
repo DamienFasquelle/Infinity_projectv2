@@ -16,6 +16,7 @@ import ForgotPassword from './pages/ForgotPassword';
 import GamePage from './pages/GamePage'; // Assurez-vous d'importer GamePage
 import PrivateRoute from './components/PrivateRoute';
 import AdminHeader from './components/AdminHeader';
+import ChatbotGPT from './pages/ChatBotGPT';
 
 const App = () => {
   return (
@@ -50,6 +51,7 @@ const App = () => {
           }
         />
       </Routes>
+      <ChatbotGPT />
       <Footer />
     </Router>
   );

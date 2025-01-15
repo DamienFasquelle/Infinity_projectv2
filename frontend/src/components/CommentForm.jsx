@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { Button, Form } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 
 const CommentForm = ({ gameId }) => {
@@ -9,13 +8,12 @@ const CommentForm = ({ gameId }) => {
   const [rating, setRating] = useState(1);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  const navigate = useNavigate();
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const token = localStorage.getItem("token");
-    console.log("Token JWT :", token);
 
     if (!token) {
       setError("Vous devez être connecté pour publier un commentaire.");
@@ -24,7 +22,6 @@ const CommentForm = ({ gameId }) => {
 
     // Décodage du token JWT
     const decodedToken = jwtDecode(token);
-    console.log("Décodage du token :", decodedToken);
 
     const userRoles = decodedToken.roles || [];
     const isUserRole = userRoles.includes("ROLE_USER");
@@ -39,8 +36,6 @@ const CommentForm = ({ gameId }) => {
       rating,
       gameId: parseInt(gameId),
     };
-    console.log("Données envoyées :", commentData);
-
     try {
       const response = await axios.post(
         `http://127.0.0.1:8000/api/comment`,

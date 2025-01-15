@@ -1,50 +1,43 @@
-import { useState } from "react";
+import React, { useState } from 'react';
+import axios from 'axios';
 
-const ChatBot = () => {
+const Chatbot = () => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
 
-  const handleSend = () => {
-    if (input.trim() !== '') {
-      setMessages([...messages, { text: input, sender: 'user' }]);
-      setInput('');
+  const sendMessage = async () => {
+    if (input.trim()) {
+      setMessages([...messages, { role: 'user', content: input }]);
 
-      // Simule une réponse du bot
-      setTimeout(() => {
-        setMessages((prevMessages) => [
-          ...prevMessages,
-          { text: 'Merci pour votre message !', sender: 'bot' },
-        ]);
-      }, 1000);
+      try {
+        const response = await axios.post('/api/chatbot', { message: input });
+        setMessages([...messages, { role: 'user', content: input }, { role: 'bot', content: response.data.response }]);
+      } catch (error) {
+        console.error('Erreur avec le chatbot:', error);
+      }
+
+      setInput('');
     }
   };
 
   return (
-    <div className="container">
-      <div className="form-container chat-container">
-        <h1>ChatBot</h1>
-        <div className="chat-window">
-          {messages.map((message, index) => (
-            <div
-              key={index}
-              className={message.sender === 'user' ? 'chat-message user' : 'chat-message bot'}
-            >
-              <span>{message.text}</span>
-            </div>
-          ))}
-        </div>
-        <div className="chat-input-container">
-          <input
-            type="text"
-            placeholder="Écrivez un message..."
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-          />
-          <button onClick={handleSend} className="btn-gradient">Envoyer</button>
-        </div>
+    <div className="chatbot">
+      <div className="messages">
+        {messages.map((msg, index) => (
+          <div key={index} className={`message ${msg.role}`}>
+            {msg.content}
+          </div>
+        ))}
       </div>
+      <input
+        type="text"
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+        placeholder="Posez votre question..."
+      />
+      <button onClick={sendMessage}>Envoyer</button>
     </div>
   );
 };
 
-export default ChatBot;
+export default Chatbot;
