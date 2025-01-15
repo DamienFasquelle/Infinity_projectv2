@@ -1,12 +1,12 @@
 import axios from 'axios';
 
-const OPENAI_API_URL = 'https://api.openai.com/v1/chat/completions';
-const OPENAI_API_KEY = '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';
+const APIURL = process.env.OPENAI_API_URL;
+const APIKEY = process.env.OPENAI_API_KEY;
 
 export const getChatbotResponse = async (message) => {
   try {
     const response = await axios.post(
-      OPENAI_API_URL,
+        APIURL,
       {
         model: 'gpt-3.5-turbo', 
         messages: [{ role: 'user', content: message }],
@@ -16,7 +16,7 @@ export const getChatbotResponse = async (message) => {
       {
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${OPENAI_API_KEY}`,
+          Authorization: `Bearer ${APIKEY}`,
         },
       }
     );
