@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Row, Col, Form, Card } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
+import { Button, Row, Col, Form} from 'react-bootstrap';
 import { useGames } from '../contexts/GameContext'; 
 import { fetchPlatforms, fetchGenres, fetchGames, fetchTags } from '../services/rawgService';
 import GameCard from '../components/GameCard';
@@ -21,7 +20,6 @@ const Games = () => {
   const [gamesToShow, setGamesToShow] = useState(100); 
 
   useEffect(() => {
-    // Fetch initial data for filters (platforms, genres, games, and tags)
     const fetchFiltersData = async () => {
       try {
         const platformsData = await fetchPlatforms();

@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Header from './components/Header'; // Le Header global
+import Header from './components/Header'; 
 import Footer from './components/Footer';
 import Home from './pages/Home';
 import Login from './pages/Login';
@@ -13,10 +13,10 @@ import Contact from './pages/Contact';
 import AdminDashboard from './pages/Admin/AdminDashboard';
 import UserDashboard from './pages/UserDashboard';
 import ForgotPassword from './pages/ForgotPassword';
-import GamePage from './pages/GamePage'; // Assurez-vous d'importer GamePage
+import GamePage from './pages/GamePage'; 
 import PrivateRoute from './components/PrivateRoute';
 import AdminHeader from './components/AdminHeader';
-import ChatbotGPT from './pages/ChatBotGPT';
+
 
 const App = () => {
   return (
@@ -51,7 +51,6 @@ const App = () => {
           }
         />
       </Routes>
-      <ChatbotGPT />
       <Footer />
     </Router>
   );

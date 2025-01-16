@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const BASE_URL = 'https://api.rawg.io/api';
-const API_KEY = "a0e550277d1841dab5d608822e10c522";
+const API_KEY = "e6eff6c408a54e21af9025ef93282c22";
 
 
 /**
@@ -9,7 +9,7 @@ const API_KEY = "a0e550277d1841dab5d608822e10c522";
  * @param {number} totalPages - Nombre de pages à charger.
  * @returns {Promise<Array>} Les données des jeux provenant de plusieurs pages.
  */
-export const fetchGames = async (totalPages = 10) => {
+export const fetchGames = async (totalPages = 2) => {
     let allGames = [];
   
     

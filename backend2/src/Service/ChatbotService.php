@@ -20,25 +20,45 @@ class ChatbotService
         $this->chatGPTApiKey = $parameterBag->get('chatGPTApiKey');
     }
 
+    private function isRecommendationRequest(string $message): bool
+    {
+        $keywords = ['jeux', 'recommande', 'suggestion', 'jeu vidéo', 'quel jeu'];
+        foreach ($keywords as $keyword) {
+            if (stripos($message, $keyword) !== false) {
+                // Log pour vérifier si un mot-clé a été détecté
+                error_log("Mot-clé détecté : $keyword");
+                return true;
+            }
+        }
+        return false;
+    }
+    
+
+
     public function getChatbotResponse(string $userMessage): string
     {
-        // Appel à OpenAI
         $openAiResponse = $this->getOpenAiResponse($userMessage);
-
-        // Ajouter des recommandations de jeux si nécessaire
-        if (str_contains(strtolower($userMessage), 'jeux') || str_contains(strtolower($userMessage), 'recommande')) {
+    
+        // Vérifie explicitement si l'intention est une recommandation
+        if ($this->isRecommendationRequest($userMessage)) {
             $games = $this->getRecommendedGames();
-            $gamesList = implode("\n", array_map(fn($game) => "- " . $game['name'], $games));
-            $openAiResponse .= "\nVoici quelques recommandations :\n" . $gamesList;
+            if (!empty($games)) {
+                $gamesList = implode("\n", array_map(fn($game) => "- " . $game['name'], $games));
+                $openAiResponse .= "\n\nVoici quelques recommandations :\n" . $gamesList;
+            } else {
+                $openAiResponse .= "\n\nJe n'ai pas pu récupérer de recommandations pour le moment.";
+            }
+        } else {
+            error_log("Pas de recommandation demandée pour : $userMessage");
         }
-
+    
         return $openAiResponse;
     }
+    
+
 
     private function getOpenAiResponse(string $message): string
     {
-        usleep(500000); // Pause pour limiter les requêtes
-
         try {
             $response = $this->httpClient->request('POST', $this->chatGPTApiUrl, [
                 'headers' => [
@@ -46,8 +66,12 @@ class ChatbotService
                     'Content-Type' => 'application/json',
                 ],
                 'json' => [
-                    'model' => 'gpt-3.5-turbo',
+                    'model' => 'gpt-4',
                     'messages' => [
+                        [
+                            'role' => 'system',
+                            'content' => 'Tu es un assistant pour un site web qui propose des recommandations de jeux vidéo en utilisant l’API RAWG.io. Toutes les questions doivent être traitées dans ce contexte.'
+                        ],
                         ['role' => 'user', 'content' => $message],
                     ],
                     'max_tokens' => 150,
@@ -61,7 +85,7 @@ class ChatbotService
             if ($e->getCode() === 429) {
                 return "Trop de requêtes envoyées. Merci d'attendre un moment avant de réessayer.";
             }
-            return "Une erreur est survenue : " . $e->getMessage();
+            return "Une erreur est survenue lors de l'appel à OpenAI : " . $e->getMessage();
         }
     }
 
@@ -70,9 +94,18 @@ class ChatbotService
         try {
             $response = $this->httpClient->request('GET', "https://api.rawg.io/api/games?key={$this->rawgApiKey}&ordering=-rating&page_size=5");
             $data = $response->toArray();
-            return $data['results'] ?? [];
+    
+         
+            return array_map(fn($game) => [
+                'id' => $game['id'],  
+                'name' => $game['name'],
+                'image' => $game['background_image'],
+                'rating' => $game['rating'],
+            ], $data['results'] ?? []);
         } catch (\Exception $e) {
-            return []; // Retourne une liste vide en cas d'erreur
+          
+            return [];
         }
     }
+    
 }
