@@ -425,10 +425,46 @@ main{
 }
 
 .comments-list {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 20px;
+  background-color: #1a1a1a;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
 }
+
+.comment {
+  border: 1px solid #ddd;
+  padding: 10px;
+  margin-bottom: 10px;
+  background-color: #f9f9f9;
+}
+
+.comment p {
+  margin: 5px 0;
+}
+
+textarea {
+  width: 100%;
+  height: 100px;
+  margin-bottom: 10px;
+}
+
+button {
+  margin-right: 10px;
+}
+
+.alert {
+  margin-bottom: 20px;
+}
+
+
+.comment strong {
+  color: #00ffff;
+}
+
+.comment span {
+  color: #d1d1d1;
+}
+
 
 .comment-item {
   background-color: #f8f9fa;
@@ -478,48 +514,140 @@ main{
 }
 
 
-.chatbot {
-  width: 400px;
-  margin: 0 auto;
-  border: 1px solid #ccc;
-  padding: 10px;
-  border-radius: 8px;
-  background-color: #f9f9f9;
+.chatbot-layout {
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+  background-color: #0e0e0e;
+  color: #fff;
 }
 
-.messages {
-  height: 300px;
+.chatbot-container {
+  flex: 2;
+  background: #1a1a1a;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.chat-header {
+  background: #0088ff;
+  color: #fff;
+  padding: 15px;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.chat-body {
+  display: flex;
+  flex-direction: column;
+  height: 500px;
+}
+
+.chat-messages {
+  flex: 1;
+  padding: 15px;
   overflow-y: auto;
+  background: #121212;
+}
+
+.chat-message {
+  display: flex;
+  align-items: flex-start;
   margin-bottom: 10px;
 }
 
-.message {
-  padding: 8px;
-  margin: 4px 0;
+.chat-message.user {
+  flex-direction: row-reverse;
 }
 
-.user {
-  text-align: right;
-  background-color: #d1e7dd;
+.chat-message .avatar {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  background: #444;
+  border-radius: 50%;
+  margin: 0 10px;
+}
+
+.chat-message .content {
+  max-width: 70%;
+  padding: 10px 15px;
   border-radius: 10px;
+  background: #2a2a2a;
+  color: #fff;
 }
 
-.bot {
-  text-align: left;
-  background-color: #f8d7da;
-  border-radius: 10px;
+.chat-message.user .content {
+  background: #0088ff;
 }
 
-input {
-  width: calc(100% - 80px);
-  padding: 8px;
+.chat-input {
+  display: flex;
+  padding: 10px;
+  border-top: 1px solid #444;
 }
 
-button {
-  padding: 8px 12px;
-  margin-left: 8px;
-  background-color: #007bff;
-  color: white;
+.chat-input input {
+  flex: 1;
+  padding: 10px;
   border: none;
   border-radius: 4px;
+  margin-right: 10px;
+  background: #1a1a1a;
+  color: #fff;
+}
+
+.chat-input button {
+  padding: 10px 15px;
+  border: none;
+  background: #0088ff;
+  color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.chat-input button:hover {
+  background: #00ffff;
+}
+
+.recommended-games {
+  flex: 1;
+  padding: 15px;
+  background: #1a1a1a;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.recommended-games h4 {
+  color: #00ffff;
+  margin-bottom: 15px;
+}
+
+.games-list {
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.game-card {
+  position: relative;
+}
+
+.favorite-heart {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 24px;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.favorite-heart.filled {
+  color: red; /* Cœur rouge lorsqu'il est favori */
 }

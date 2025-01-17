@@ -99,4 +99,30 @@ class CommentController extends AbstractController
 
         return $this->json(['message' => 'Commentaire supprimé avec succès']);
     }
+
+    #[Route('/comments/{gameId}', name: 'get_comments_by_game', methods: ['GET'])]
+    public function getCommentsByGame(int $gameId, CommentRepository $commentRepository): JsonResponse
+    {
+        $comments = $commentRepository->findBy(['idGames' => $gameId]);
+    
+        if (!$comments) {
+            return $this->json(['message' => 'Aucun commentaire trouvé pour ce jeu.'], 404);
+        }
+    
+        $commentsData = array_map(function ($comment) {
+            return [
+                'id' => $comment->getId(),
+                'content' => $comment->getContent(),
+                'rating' => $comment->getRating(),
+                'created_at' => $comment->getCreatedAt()->format('Y-m-d H:i:s'),
+                'userId' => $comment->getIdUser()->getId(),
+                'user' => $comment->getIdUser()->getUsername(),
+            ];
+        }, $comments);
+    
+        return $this->json($commentsData);
+    }
+    
+
+
 }

@@ -101,7 +101,7 @@ const Header = () => {
                 </Nav.Link>
               )}
               {isUser && !isAdmin && (
-                <Nav.Link as={Link} to="/account">
+                <Nav.Link as={Link} to="/user">
                   Mon compte
                 </Nav.Link>
               )}
@@ -142,9 +142,6 @@ const Header = () => {
             </Button>
             {isAuthenticated ? (
               <>
-                <span className="me-2 text-white">
-                  Bienvenue, {userInfo?.username}
-                </span>
                 <Button variant="danger" onClick={handleLogout}>
                   Déconnexion
                 </Button>

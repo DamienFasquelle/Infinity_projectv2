@@ -1,7 +1,11 @@
 import axios from 'axios';
 
-const BASE_URL = 'https://api.rawg.io/api';
-const API_KEY = "e6eff6c408a54e21af9025ef93282c22";
+// Charge les variables d'environnement depuis le fichier .env
+require('dotenv').config();
+
+// Utilisation des variables d'environnement
+const BASE_URL = process.env.BASE_URL;
+const API_KEY = process.env.API_KEY;
 
 
 /**

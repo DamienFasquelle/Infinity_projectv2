@@ -25,7 +25,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var array<string> The user roles
      */
     #[ORM\Column(type: 'json')]
-    private array $roles = ['ROLE_USER'];  
+    private array $roles = ['ROLE_USER'];
 
     /**
      * @var string The hashed password
@@ -42,9 +42,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'idUser')]
     private Collection $comments;
 
+    /**
+     * @var Collection<int, FavoriteGame>
+     */
+    #[ORM\OneToMany(targetEntity: FavoriteGame::class, mappedBy: 'user', cascade: ['persist', 'remove'])]
+    private Collection $favoriteGames;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
+        $this->favoriteGames = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -81,7 +88,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getRoles(): array
     {
         $roles = $this->roles;
-       
+
         if (!in_array('ROLE_USER', $roles)) {
             $roles[] = 'ROLE_USER';
         }
@@ -158,6 +165,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($comment->getIdUser() === $this) {
                 $comment->setIdUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, FavoriteGame>
+     */
+    public function getFavoriteGames(): Collection
+    {
+        return $this->favoriteGames;
+    }
+
+    public function addFavoriteGame(FavoriteGame $favoriteGame): static
+    {
+        if (!$this->favoriteGames->contains($favoriteGame)) {
+            $this->favoriteGames->add($favoriteGame);
+            $favoriteGame->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFavoriteGame(FavoriteGame $favoriteGame): static
+    {
+        if ($this->favoriteGames->removeElement($favoriteGame)) {
+            // set the owning side to null (unless already changed)
+            if ($favoriteGame->getUser() === $this) {
+                $favoriteGame->setUser(null);
             }
         }
 

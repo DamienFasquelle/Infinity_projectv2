@@ -1,18 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import GameCard from '../components/GameCard';
-import { Row, Col } from 'react-bootstrap';
+import { Row, Col, Container } from 'react-bootstrap';
 import { useGames } from '../contexts/GameContext';
-
 
 const ChatBot = () => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
-  const token = localStorage.getItem("token");
-
   const messagesEndRef = useRef(null);
-
-  const { handleSearch, searchResults, loading } = useGames(); 
+  const { handleSearch, searchResults } = useGames();
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -20,43 +17,29 @@ const ChatBot = () => {
 
   const sendMessage = async () => {
     if (input.trim()) {
-      setMessages([...messages, { role: 'user', content: input }]);
+      const newMessages = [...messages, { role: 'user', content: input }];
+      setMessages(newMessages);
 
       try {
         const response = await axios.post(
-          'http://localhost:8000/api/chatbot', 
+          'http://localhost:8000/api/chatbot',
           { message: input },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              'Content-Type': 'application/json',
-            },
-          }
+          { headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' } }
         );
-        
+
         const botResponse = response.data.response;
         setMessages([
-          ...messages,
-          { role: 'user', content: input },
+          ...newMessages,
           { role: 'bot', content: botResponse },
         ]);
 
         const gameNames = extractGameNames(botResponse);
-        console.log('Jeux détectés:', gameNames);
-
-        gameNames.forEach((gameName) => {
-          handleSearch(gameName); 
-        });
-
+        gameNames.forEach((gameName) => handleSearch(gameName));
       } catch (error) {
         console.error('Erreur avec le chatbot:', error);
-
-        const errorMessage =
-          error.response?.data?.message || 'Une erreur est survenue. Réessayez plus tard.';
         setMessages([
-          ...messages,
-          { role: 'user', content: input },
-          { role: 'bot', content: errorMessage },
+          ...newMessages,
+          { role: 'bot', content: 'Une erreur est survenue. Réessayez plus tard.' },
         ]);
       }
 
@@ -64,56 +47,66 @@ const ChatBot = () => {
     }
   };
 
-  // Fonction pour extraire les noms de jeux vidéo d'une phrase
   const extractGameNames = (text) => {
-    const gameNamesRegex = /([A-Za-z0-9\s\-:]+)/g; // Ceci extrait les mots qui peuvent correspondre à un jeu
-    const gameNames = text.match(gameNamesRegex);
-    
-    return gameNames ? gameNames.filter(name => name.length > 2) : [];
+    const gameNamesRegex = /([A-Za-z0-9\s\-:]+)/g;
+    return (text.match(gameNamesRegex) || []).filter((name) => name.length > 2);
   };
 
   return (
-    <div className="chatbot-container">
-      <div className="chat-window">
-        <div className="chat-header">Chatbot</div>
-        <div className="chat-body">
-          <div className="chat-messages">
-            {messages.map((msg, index) => (
-              <div
-                key={index}
-                className={`chat-message ${msg.role === 'user' ? 'user-message' : 'bot-message'}`}
-              >
-                {msg.content}
-              </div>
-            ))}
+    <Container fluid className="chatbot-layout py-4">
+      <Row>
+        {/* Chatbot Section */}
+        <Col lg={4} md={6} sm={8}>
+          <div className="chat-header bg-primary text-white p-3 rounded">Chatbot</div>
+          <div className="chat-body p-3 rounded">
+            <div className="chat-messages">
+              {messages.map((msg, index) => (
+                <div key={index} className={`chat-message d-flex mb-3 ${msg.role}`}>
+                  <div className="avatar me-2">
+                    {msg.role === 'user' ? (
+                      <img src="/user-avatar.png" alt="User" className="rounded-circle" width="40" />
+                    ) : (
+                      <img src="/bot-avatar.png" alt="Bot" className="rounded-circle" width="40" />
+                    )}
+                  </div>
+                  <div className={`content p-2 rounded`}>
+                    {msg.content}
+                  </div>
+                </div>
+              ))}
+              <div ref={messagesEndRef} />
+            </div>
+            <div className="chat-input mt-3 d-flex">
+              <input
+                type="text"
+                className="form-control me-2"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder="Posez votre question..."
+                onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
+              />
+              <button className="btn btn-primary" onClick={sendMessage}>Envoyer</button>
+            </div>
           </div>
-          <div className="chat-input">
-            <input
-              type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder="Posez votre question..."
-              onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
-            />
-            <button onClick={sendMessage}>Envoyer</button>
-          </div>
-        </div>
-      </div>
+        </Col>
 
-      {/* Section des jeux recommandés */}
-      <div className="recommended-games">
-        <h4>Jeux Recommandés</h4>
-        <div className="games-list">
-          <Row className="justify-content-center">
-            {searchResults.map((game) => (
-              <Col key={game.id} md={4} sm={6} lg={2} className="mb-4">
-                <GameCard game={game} /> {/* Affichage des informations du jeu */}
-              </Col>
-            ))}
-          </Row>
-        </div>
-      </div>
-    </div>
+        {/* Recommended Games Section */}
+        <Col lg={8}>
+          <div className="bg-dark text-white p-3 rounded">
+            <h4>Jeux Recommandés</h4>
+            <div className="games-list mt-3">
+              <Row className="g-3">
+                {searchResults.map((game) => (
+                  <Col key={game.id} md={3} sm={12}>
+                    <GameCard game={game} />
+                  </Col>
+                ))}
+              </Row>
+            </div>
+          </div>
+        </Col>
+      </Row>
+    </Container>
   );
 };
 
