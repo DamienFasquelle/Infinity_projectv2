@@ -1,67 +1,38 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useRef, useEffect, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Navbar, Nav, Container, Form, Button } from "react-bootstrap";
+import { Navbar, Nav, Container, Row, Col, Form, Button } from "react-bootstrap";
 import logo from "../assets/images/logo.png";
 import { useGames } from "../contexts/GameContext";
+import { AuthContext } from "../providers/AuthProvider";
 
 const Header = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [isUser, setIsUser] = useState(false);
-  const [userInfo, setUserInfo] = useState(null);
+  const { isAuthenticated, isAdmin, isUser, logout } = useContext(AuthContext);
   const [searchQuery, setSearchQuery] = useState("");
   const [showResults, setShowResults] = useState(false);
-  const { searchResults, handleSearch, loading } = useGames();
+  const { searchResults, handleSearch } = useGames();
   const navigate = useNavigate();
   const searchRef = useRef(null);
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      setIsAuthenticated(true);
-      try {
-        const decodedToken = JSON.parse(atob(token.split(".")[1]));
-        setUserInfo(decodedToken);
-        const userRoles = decodedToken.roles || [];
-        setIsAdmin(userRoles.includes("ROLE_ADMIN"));
-        setIsUser(userRoles.includes("ROLE_USER"));
-      } catch (error) {
-        console.error("Token invalide ou corrompu", error);
-        setIsAuthenticated(false);
-      }
-    } else {
-      setIsAuthenticated(false);
-    }
-  }, []);
-
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    setIsAuthenticated(false);
-    setIsAdmin(false);
-    setIsUser(false);
-    setUserInfo(null);
-    navigate("/login");
-  };
-
+  // Gestion de la recherche
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
     handleSearch(e.target.value);
-    setShowResults(true); // Afficher les résultats dès que l'utilisateur tape
+    setShowResults(true);
   };
 
   const handleSelectResult = (selected) => {
     const selectedGame = searchResults.find(result => result.name === selected);
     if (selectedGame) {
-      localStorage.setItem("selectedGameId", selectedGame.id); // Sauvegarde l'ID dans le localStorage
-      navigate(`/gamepage/${selectedGame.id}`); // Redirection vers la page du jeu
+      localStorage.setItem("selectedGameId", selectedGame.id);
+      navigate(`/gamepage/${selectedGame.id}`);
     }
     setSearchQuery(selected);
-    setShowResults(false); // Cacher les résultats après la sélection
+    setShowResults(false);
   };
 
   const handleClickOutside = (e) => {
     if (searchRef.current && !searchRef.current.contains(e.target)) {
-      setShowResults(false); // Cacher la liste déroulante si l'utilisateur clique en dehors
+      setShowResults(false);
     }
   };
 
@@ -75,9 +46,9 @@ const Header = () => {
   return (
     <header className="header-container">
       <Navbar expand="lg" bg="dark" variant="dark" className="py-3">
-        <Container className="d-flex justify-content-between align-items-center">
-          {/* Logo aligné à gauche */}
-          <Navbar.Brand as={Link} to="/">
+        <Container>
+          {/* Logo */}
+          <Navbar.Brand as={Link} to="/" className="col-12 col-lg-auto">
             <img
               src={logo}
               alt="Infinity Games Logo"
@@ -86,46 +57,44 @@ const Header = () => {
             />
           </Navbar.Brand>
 
-          {/* Menu centré */}
-          <Navbar.Collapse id="navbar-nav" className="mx-auto">
-            <Nav className="d-flex justify-content-center">
-              <Nav.Link as={Link} to="/games">
-                Jeux
-              </Nav.Link>
-              <Nav.Link as={Link} to="/chatbot">
-                ChatBot
-              </Nav.Link>
-              {isAdmin && (
-                <Nav.Link as={Link} to="/admin">
-                  Administration
-                </Nav.Link>
-              )}
-              {isUser && !isAdmin && (
-                <Nav.Link as={Link} to="/user">
-                  Mon compte
-                </Nav.Link>
-              )}
-            </Nav>
-          </Navbar.Collapse>
+          {/* Menu Burger (responsive) */}
+          <Navbar.Toggle aria-controls="navbar-nav" />
 
-          {/* Barre de recherche et connexion alignée à droite */}
-          <div className="d-flex align-items-center ms-3" ref={searchRef}>
-            <div className="flex-column">
-              <Form className="search-form-container" role="search">
-                <div className="search-form">
+          <Navbar.Collapse id="navbar-nav" className="col-12 col-lg-auto">
+            <Row className="w-100">
+              <Col xs={12} lg={8}>
+                <Nav className="d-flex justify-content-center">
+                  <Nav.Link as={Link} to="/games">
+                    Jeux
+                  </Nav.Link>
+                  {isAdmin && (
+                    <Nav.Link as={Link} to="/admin">
+                      Administration
+                    </Nav.Link>
+                  )}
+                  {isUser && !isAdmin && (
+                    <Nav.Link as={Link} to="/user">
+                      Mon compte
+                    </Nav.Link>
+                  )}
+                </Nav>
+              </Col>
+
+              {/* Barre de recherche */}
+              <Col xs={12} lg={4} className="d-flex justify-content-end align-items-center">
+                <Form className="search-form-container" role="search" style={{ width: '100%' }}>
                   <input
                     type="text"
                     placeholder="Trouver votre jeu"
-                    className="search-input"
+                    className="search-input form-control"
                     value={searchQuery}
                     onChange={handleSearchChange}
                   />
-
                   {showResults && searchQuery && (
                     <select
                       size="5"
                       onChange={(e) => handleSelectResult(e.target.value)}
-                      className="search-dropdown"
+                      className="search-dropdown form-control"
                     >
                       {searchResults?.map((result, index) => (
                         <option key={index} value={result.name}>
@@ -134,24 +103,23 @@ const Header = () => {
                       ))}
                     </select>
                   )}
-                </div>
-              </Form>
-            </div>
-            <Button variant="outline-light" type="submit">
-              Rechercher
-            </Button>
-            {isAuthenticated ? (
-              <>
-                <Button variant="danger" onClick={handleLogout}>
-                  Déconnexion
-                </Button>
-              </>
-            ) : (
-              <Link className="btn btn-gradient ms-2" to="/login">
-                Connexion
-              </Link>
-            )}
-          </div>
+                </Form>
+
+                {/* Boutons de connexion / déconnexion */}
+                {isAuthenticated ? (
+                  <>
+                    <Button variant="danger" onClick={logout} className="ms-2">
+                      Déconnexion
+                    </Button>
+                  </>
+                ) : (
+                  <Link className="btn btn-gradient ms-2" to="/login">
+                    Connexion
+                  </Link>
+                )}
+              </Col>
+            </Row>
+          </Navbar.Collapse>
         </Container>
       </Navbar>
     </header>

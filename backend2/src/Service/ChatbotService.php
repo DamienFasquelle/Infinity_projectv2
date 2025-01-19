@@ -25,7 +25,6 @@ class ChatbotService
         $keywords = ['jeux', 'recommande', 'suggestion', 'jeu vidéo', 'quel jeu'];
         foreach ($keywords as $keyword) {
             if (stripos($message, $keyword) !== false) {
-                // Log pour vérifier si un mot-clé a été détecté
                 error_log("Mot-clé détecté : $keyword");
                 return true;
             }
@@ -39,21 +38,15 @@ class ChatbotService
     {
         $openAiResponse = $this->getOpenAiResponse($userMessage);
     
-        // Vérifie explicitement si l'intention est une recommandation
+     
         if ($this->isRecommendationRequest($userMessage)) {
-            $games = $this->getRecommendedGames();
-            if (!empty($games)) {
-                $gamesList = implode("\n", array_map(fn($game) => "- " . $game['name'], $games));
-                $openAiResponse .= "\n\nVoici quelques recommandations :\n" . $gamesList;
-            } else {
-                $openAiResponse .= "\n\nJe n'ai pas pu récupérer de recommandations pour le moment.";
-            }
-        } else {
-            error_log("Pas de recommandation demandée pour : $userMessage");
+            $openAiResponse .= "\n\nSi vous voulez en savoir plus sur ces jeux ou d'autres, utilisez notre barre de recherche pour les explorer.";
         }
     
         return $openAiResponse;
     }
+    
+
     
 
 

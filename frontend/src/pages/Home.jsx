@@ -22,27 +22,40 @@ const Home = () => {
   }, []); // Ne s'exécute qu'une seule fois, au moment du montage du composant
 
   // Filtrer les jeux populaires (note >= 4)
-  const popularGames = games.filter(game => game.rating >= 4);
+  const popularGames = games.filter((game) => game.rating >= 4);
 
   return (
     <main className="home container">
-      {/* Section: Hero */}
-      <section className="hero text-center my-5">
+      {/* Section: Introduction */}
+      <section className="intro text-center my-2">
         <h1>Bienvenue sur Infinity Games</h1>
-      </section>
-
-      {/* Section: Résumé */}
-      <section className="summary text-center my-5">
-        <h2>Qui sommes-nous ?</h2>
-        <p>
-          Infinity Games est une plateforme qui vous permet de trouver les derniers jeux disponibles
-          sur toutes les plateformes, avec des critiques détaillées et des recommandations
-          personnalisées.
+        <p className="intro-text">
+          Découvrez les jeux vidéo les plus récents, explorez les classiques intemporels et plongez dans un monde de divertissement infini. Que vous soyez un joueur occasionnel ou un passionné, nous avons quelque chose pour tout le monde !
         </p>
+        <Row className="info-blocks justify-content-center my-5">
+          <Col lg={4} md={6} sm={12} className="info-block">
+            <div className="info-card">
+              <h3>Jeux Récents</h3>
+              <p>Explorez les dernières sorties de jeux vidéo pour être toujours à jour.</p>
+            </div>
+          </Col>
+          <Col lg={4} md={6} sm={12} className="info-block">
+            <div className="info-card">
+              <h3>Jeux Populaires</h3>
+              <p>Découvrez les jeux les mieux notés et les plus aimés par la communauté.</p>
+            </div>
+          </Col>
+          <Col lg={4} md={6} sm={12} className="info-block">
+            <div className="info-card">
+              <h3>Genres Variés</h3>
+              <p>Parcourez une grande variété de genres pour trouver votre prochain coup de cœur.</p>
+            </div>
+          </Col>
+        </Row>
       </section>
 
-       {/* Section: Jeux Récemment Sortis */}
-       <section className="recent-games my-5">
+      {/* Section: Jeux Récemment Sortis */}
+      <section className="recent-games my-5">
         <h2>Jeux Récemment Sortis</h2>
         {loading ? (
           <p>Chargement des jeux récemment sortis...</p>
@@ -72,8 +85,6 @@ const Home = () => {
           </Row>
         )}
       </section>
-
-     
     </main>
   );
 };

@@ -24,6 +24,7 @@ const AdminHeader = () => {
     setIsAuthenticated(false);
     setUserInfo(null);
     navigate('/login');
+   
   };
 
   return (

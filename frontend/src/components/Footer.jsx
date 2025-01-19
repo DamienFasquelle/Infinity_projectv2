@@ -26,4 +26,15 @@ const Footer = () => {
   );
 };
 
-export default Footer;
+const Layout = ({ children }) => {
+  return (
+    <div className="page-container">
+      <div className="container">
+        {children}
+      </div>
+      <Footer />
+    </div>
+  );
+};
+
+export default Layout;

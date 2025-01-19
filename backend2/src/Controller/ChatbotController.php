@@ -18,13 +18,14 @@ class ChatbotController extends AbstractController
     }
 
     #[Route('/api/chatbot', name: 'chatbot', methods: ['POST'])]
-    public function interact(Request $request): JsonResponse
-    {
-        $content = json_decode($request->getContent(), true);
-        $userMessage = $content['message'] ?? '';
+public function interact(Request $request): JsonResponse
+{
+    $content = json_decode($request->getContent(), true);
+    $userMessage = $content['message'] ?? '';
 
-        $response = $this->chatbotService->getChatbotResponse($userMessage);
+    $chatbotResponse = $this->chatbotService->getChatbotResponse($userMessage);
 
-        return new JsonResponse(['response' => $response]);
-    }
+    return new JsonResponse($chatbotResponse);
+}
+
 }

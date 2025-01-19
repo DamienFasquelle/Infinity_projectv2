@@ -13,7 +13,6 @@ import {
 import { Button, Col, Form, Row } from "react-bootstrap";
 import GameCard from "../components/GameCard";
 import { jwtDecode } from "jwt-decode";
-import { use } from "react";
 
 const GamePage = () => {
   const { id } = useParams();
@@ -45,44 +44,25 @@ const GamePage = () => {
 
     const fetchDetails = async () => {
       try {
-        // Fetch game details
         const data = await fetchGameDetails(id);
         setGameDetails(data);
-
-        // Fetch game screenshots
         const screenshotData = await fetchGameScreenshots(id);
         setScreenshots(screenshotData.results || []);
-
-        // Fetch developers
         const developersData = await fetchDevelopers();
         setDevelopers(developersData.results || []);
-
-        // Fetch creators
         const creatorsData = await fetchCreators();
         setCreators(creatorsData.results || []);
-
-        // Fetch stores
         const storesData = await fetchStores();
         setStores(storesData.results || []);
-
-        // Fetch game videos
         const videoData = await fetchGameVideos(id);
         setVideos(videoData.results || []);
-
         const gameSeriesData = await fetchGameSeries(id);
         setGamesSeries(gameSeriesData.results || []);
-
         if (data.genres && data.tags) {
-          const similarGamesData = await fetchSimilarGames(
-            id,
-            data.genres,
-            data.tags
-          );
+          const similarGamesData = await fetchSimilarGames(id, data.genres, data.tags);
           setSimilarGames(similarGamesData);
         }
-        const commentResponse = await fetch(
-          `http://127.0.0.1:8000/comments/${id}`
-        );
+        const commentResponse = await fetch(`http://127.0.0.1:8000/comments/${id}`);
         const commentData = await commentResponse.json();
         setComments(commentData);
       } catch (error) {
@@ -140,15 +120,12 @@ const GamePage = () => {
   const handleDeleteComment = async (commentId) => {
     const token = localStorage.getItem("token");
     try {
-      const response = await fetch(
-        `http://127.0.0.1:8000/api/comment/${commentId}`,
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await fetch(`http://127.0.0.1:8000/api/comment/${commentId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       if (response.status === 200) {
         window.location.reload();
       }
@@ -160,21 +137,18 @@ const GamePage = () => {
   const handleEditComment = async (commentId) => {
     const token = localStorage.getItem("token");
     try {
-      const response = await fetch(
-        `http://127.0.0.1:8000/api/comment/${commentId}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            content: editedComment,
-            rating: editedRating,
-            gameId: id,
-          }),
-        }
-      );
+      const response = await fetch(`http://127.0.0.1:8000/api/comment/${commentId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          content: editedComment,
+          rating: editedRating,
+          gameId: id,
+        }),
+      });
       if (response.status === 200) {
         setIsEditing(null);
         setEditedComment("");
@@ -223,7 +197,7 @@ const GamePage = () => {
               <div className="similar-name-games">
                 <Row className="justify-content-center">
                   {gamesSeries.map((game) => (
-                    <Col key={game.id} md={4} sm={6} lg={2} className="mb-4">
+                    <Col key={game.id} md={4} sm={6} lg={3} className="mb-4">
                       <GameCard game={game} />
                     </Col>
                   ))}
@@ -266,83 +240,59 @@ const GamePage = () => {
             )}
           </section>
 
-          {/* Développeurs, Créateurs et Magasins - Affichage sur une ligne */}
-          <section className="d-flex justify-content-around my-4">
-            {/* Développeurs */}
-            <div className="developers">
-              <h2>Développeurs</h2>
-              {developers.length > 0 ? (
-                <ul>
-                  {developers.map((dev) => (
-                    <li key={dev.id}>{dev.name}</li>
-                  ))}
-                </ul>
-              ) : (
-                <p>Non spécifié</p>
-              )}
-            </div>
-
-            {/* Créateurs */}
-            <div className="creators">
-              <h2>Créateurs</h2>
-              {creators.length > 0 ? (
-                <ul>
-                  {creators.map((creator) => (
-                    <li key={creator.id}>{creator.name}</li>
-                  ))}
-                </ul>
-              ) : (
-                <p>Non spécifié</p>
-              )}
-            </div>
-
-            {/* Magasins */}
-            <div className="stores">
-              <h2>Magasins</h2>
-              {stores.length > 0 ? (
-                <ul>
-                  {stores.map((store) => (
-                    <li key={store.id}>
-                      <a
-                        href={store.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        {store.name}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p>Non spécifié</p>
-              )}
-            </div>
-          </section>
-
-          {/* Exigences système */}
+          {/* Développeurs, Créateurs et Magasins */}
           <section className="my-4">
-            <h2>Exigences système</h2>
-            {gameDetails.platforms &&
-            gameDetails.platforms[0]?.requirements_en ? (
-              <div className="requirements">
-                <div>
-                  <h4>Minimum</h4>
-                  <pre>
-                    {gameDetails.platforms[0]?.requirements_en?.minimum ||
-                      "Non spécifié"}
-                  </pre>
-                </div>
-                <div>
-                  <h4>Recommandé</h4>
-                  <pre>
-                    {gameDetails.platforms[0]?.requirements_en?.recommended ||
-                      "Non spécifié"}
-                  </pre>
-                </div>
-              </div>
-            ) : (
-              <p>Non spécifié</p>
-            )}
+            <Row>
+              {/* Développeurs */}
+              <Col md={4}>
+                <h2>Développeurs</h2>
+                {developers.length > 0 ? (
+                  <ul>
+                    {developers.map((dev) => (
+                      <li key={dev.id}>{dev.name}</li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p>Non spécifié</p>
+                )}
+              </Col>
+
+              {/* Créateurs */}
+              <Col md={4}>
+                <h2>Créateurs</h2>
+                {creators.length > 0 ? (
+                  <ul>
+                    {creators.map((creator) => (
+                      <li key={creator.id}>{creator.name}</li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p>Non spécifié</p>
+                )}
+              </Col>
+
+              {/* Magasins */}
+              <Col md={4}>
+                <h2>Magasins</h2>
+                {stores.length > 0 ? (
+                  <ul>
+                    {stores.map((store) => (
+                      <li key={store.id}>
+                        <a
+                          href={store.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {store.name}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p>Non spécifié</p>
+                )}
+              </Col>
+            </Row>
           </section>
 
           {/* Captures d'écran */}
@@ -350,16 +300,17 @@ const GamePage = () => {
             <h2>Captures d'écran</h2>
             {screenshots.length > 0 ? (
               <div className="game-screenshots">
-                <div className="screenshots-container">
+                <Row>
                   {screenshots.map((screenshot, index) => (
-                    <img
-                      key={index}
-                      src={screenshot.image}
-                      alt={`Screenshot ${index + 1}`}
-                      className="screenshot"
-                    />
+                    <Col key={index} sm={6} md={4} lg={3} className="mb-4">
+                      <img
+                        src={screenshot.image}
+                        alt={`Screenshot ${index + 1}`}
+                        className="screenshot img-fluid"
+                      />
+                    </Col>
                   ))}
-                </div>
+                </Row>
               </div>
             ) : (
               <p>Non spécifié</p>
@@ -371,18 +322,15 @@ const GamePage = () => {
             <h2>Vidéos</h2>
             {videos.length > 0 ? (
               <div className="game-videos">
-                <Row className="videos-container">
+                <Row>
                   {videos.map((video, index) => {
                     const videoUrl = video.data.max || video.data["480"];
-
                     return (
                       <Col
                         key={index}
-                        xs={12}
                         sm={6}
                         md={4}
                         lg={3}
-                        xl={3}
                         className="mb-4"
                       >
                         {videoUrl ? (
@@ -390,8 +338,7 @@ const GamePage = () => {
                             <h3>{video.name}</h3>
                             <video width="100%" height="auto" controls>
                               <source src={videoUrl} type="video/mp4" />
-                              Votre navigateur ne supporte pas la lecture de
-                              cette vidéo.
+                              Votre navigateur ne supporte pas la lecture de cette vidéo.
                             </video>
                           </div>
                         ) : (
@@ -406,103 +353,83 @@ const GamePage = () => {
               <p>Aucune vidéo disponible.</p>
             )}
           </section>
-          <section className="my-4">
-            <h2>Jeux Similaires</h2>
-            {similarGames.length > 0 ? (
-              <div className="similar-games">
-                <Row className="justify-content-center">
-                  {similarGames.map((game) => (
-                    <Col key={game.id} md={4} sm={6} lg={2} className="mb-4">
-                      <GameCard game={game} />
-                    </Col>
-                  ))}
-                </Row>
-              </div>
-            ) : (
-              <p>Aucun jeu similaire trouvé.</p>
-            )}
-          </section>
+
           {/* Commentaires */}
           <section className="my-4">
             <h2>Commentaires</h2>
             {comments.length > 0 ? (
               <div className="comments-list">
-                 {comments.map((comment) => {
-        const token = localStorage.getItem('token');
-        const decodedToken = token ? jwtDecode(token) : null;
-        const userId = decodedToken?.userId;
-        const isAdmin = decodedToken?.roles?.includes('ROLE_ADMIN');
-        console.log(userId, isAdmin);
-        return (
-          <div key={comment.id} className="comment">
-            {isEditing === comment.id ? (
-              <div>
-                <textarea
-                  value={editedComment}
-                  onChange={(e) => setEditedComment(e.target.value)}
-                />
-                <input
-                  type="number"
-                  min="1"
-                  max="5"
-                  value={editedRating}
-                  onChange={(e) =>
-                    setEditedRating(Number(e.target.value))
-                  }
-                />
-                <button
-                  onClick={() => handleEditComment(comment.id)}
-                  className="btn-gradient"
-                >
-                  Enregistrer
-                </button>
-                <button
-                  onClick={() => setIsEditing(null)}
-                  className="btn-danger"
-                >
-                  Annuler
-                </button>
+                {comments.map((comment) => {
+                  const token = localStorage.getItem('token');
+                  const decodedToken = token ? jwtDecode(token) : null;
+                  const userId = decodedToken?.userId;
+                  const isAdmin = decodedToken?.roles?.includes('ROLE_ADMIN');
+                  return (
+                    <div key={comment.id} className="comment">
+                      {isEditing === comment.id ? (
+                        <div>
+                          <textarea
+                            value={editedComment}
+                            onChange={(e) => setEditedComment(e.target.value)}
+                          />
+                          <input
+                            type="number"
+                            min="1"
+                            max="5"
+                            value={editedRating}
+                            onChange={(e) =>
+                              setEditedRating(Number(e.target.value))
+                            }
+                          />
+                          <button
+                            onClick={() => handleEditComment(comment.id)}
+                            className="btn-gradient"
+                          >
+                            Enregistrer
+                          </button>
+                          <button
+                            onClick={() => setIsEditing(null)}
+                            className="btn-danger"
+                          >
+                            Annuler
+                          </button>
+                        </div>
+                      ) : (
+                        <div>
+                          <p>
+                            <strong>{comment.user}</strong> - {comment.created_at}
+                          </p>
+                          <p>{comment.content}</p>
+                          <p>Note: {comment.rating} / 5</p>
+                          {(comment.userId === userId || isAdmin) && (
+                            <div>
+                              <button
+                                onClick={() =>
+                                  startEditing(comment.id, comment.content, comment.rating)
+                                }
+                                className="btn-gradient"
+                              >
+                                Modifier
+                              </button>
+                              <button
+                                onClick={() => handleDeleteComment(comment.id)}
+                                className="btn-danger"
+                              >
+                                Supprimer
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
             ) : (
-              <div>
-                <p>
-                  <strong>{comment.user}</strong> - {comment.created_at}
-                </p>
-                <p>{comment.content}</p>
-                <p>Note: {comment.rating} / 5</p>
-                {/* Afficher les boutons de modification et de suppression uniquement si l'utilisateur connecté est l'auteur du commentaire ou un administrateur */}
-                {(comment.userId === userId || isAdmin) && (
-                  <div>
-                    <button
-                      onClick={() =>
-                        startEditing(
-                          comment.id,
-                          comment.content,
-                          comment.rating
-                        )
-                      }
-                      className="btn-gradient"
-                    >
-                      Modifier
-                    </button>
-                    <button
-                      onClick={() => handleDeleteComment(comment.id)}
-                      className="btn-danger"
-                    >
-                      Supprimer
-                    </button>
-                  </div>
-                )}
-              </div>
+              <p>Aucun commentaire pour ce jeu.</p>
             )}
-          </div>
-        );
-      })}
-    </div>
-  ) : (
-    <p>Aucun commentaire pour ce jeu.</p>
-  )}
-</section>
+          </section>
+
           {isConnected && (
             <section className="my-4">
               <h3>Ajouter un Commentaire</h3>
@@ -528,17 +455,15 @@ const GamePage = () => {
                     onChange={(e) => setNewRating(Number(e.target.value))}
                     required
                   >
-                    <option value={1}>1</option>
-                    <option value={2}>2</option>
-                    <option value={3}>3</option>
-                    <option value={4}>4</option>
-                    <option value={5}>5</option>
+                    {[1, 2, 3, 4, 5].map((rating) => (
+                      <option key={rating} value={rating}>
+                        {rating}
+                      </option>
+                    ))}
                   </Form.Control>
                 </Form.Group>
 
-                <Button variant="primary" type="submit">
-                  Publier
-                </Button>
+                <Button type="submit">Soumettre</Button>
               </Form>
             </section>
           )}
